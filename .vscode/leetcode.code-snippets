@@ -1,0 +1,61 @@
+{
+    "LeetCode Problem Template": {
+        "prefix": "!leetcode",
+        "description": "Create a new LeetCode problem structure with Java and Python solutions",
+        "body": [
+            "# Daily LeetCode Problem - ${1:${CURRENT_DATE/(.+)/\\1/}}",
+            "",
+            "## Problem",
+            "[${2:Problem Title}](${3:problem_url})",
+            "",
+            "## Problem Statement",
+            "${4:Add problem description here}",
+            "",
+            "## Solutions",
+            "",
+            "### Java Solution",
+            "Located in [`java/Solution.java`](java/Solution.java)",
+            "",
+            "#### Approach",
+            "${5:Add Java solution approach here}",
+            "",
+            "#### Complexity Analysis",
+            "- Time Complexity: ${6:O(n)}",
+            "- Space Complexity: ${7:O(1)}",
+            "",
+            "### Python Solution",
+            "Located in [`python/solution.py`](python/solution.py)",
+            "",
+            "#### Approach",
+            "${8:Add Python solution approach here}",
+            "",
+            "#### Complexity Analysis",
+            "- Time Complexity: ${9:O(n)}",
+            "- Space Complexity: ${10:O(1)}",
+            "",
+            "## Notes/Explanation",
+            "${11:Add any additional notes or explanations here}"
+        ]
+    },
+    "LeetCode Java Solution": {
+        "prefix": "!leetcodejava",
+        "description": "Create a new LeetCode Java solution template",
+        "body": [
+            "class Solution {",
+            "    ${1:public return_type} ${2:methodName}(${3:parameters}) {",
+            "        ${4:// TODO: Implement your solution here}",
+            "    }",
+            "}"
+        ]
+    },
+    "LeetCode Python Solution": {
+        "prefix": "!leetcodepy",
+        "description": "Create a new LeetCode Python solution template",
+        "body": [
+            "class Solution:",
+            "    def ${1:method_name}(self, ${2:parameters}) -> ${3:return_type}:",
+            "        ${4:# TODO: Implement your solution here}",
+            "        pass"
+        ]
+    }
+}
