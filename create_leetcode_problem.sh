@@ -175,7 +175,7 @@ Located in [`java/Solution.java`](java/Solution.java)
 
 ### Python Solution
 
-Located in [`python/solution.py`](python/solution.py)
+Located in [`python/solution.ipynb`](python/solution.ipynb)
 
 #### Approach
 
