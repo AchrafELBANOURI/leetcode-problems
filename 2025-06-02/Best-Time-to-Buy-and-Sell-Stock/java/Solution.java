@@ -2,19 +2,16 @@ import java.util.*;
 
 class Solution {
     public int maxProfit(int[] prices) {
-        int buy = prices[0];
-        int sell = prices[1];
+        if (prices.length < 2) {
+            return 0;
+        }
+        int minPrice = prices[0];
         int maxProfit = 0;
-        for (int i = 1; i < prices.length - 1; i++) {
-            int profit = sell - buy;
-            if (profit >= 0) {
-                if (profit > maxProfit) {
-                    maxProfit = sell - buy;
-                }
-                sell = prices[i + 1];
+        for (int i = 1; i < prices.length; i++) {
+            if (prices[i] < minPrice) {
+                minPrice = prices[i];
             } else {
-                buy = prices[i];
-                sell = prices[i + 1];
+                maxProfit = Math.max(maxProfit, prices[i] - minPrice);
             }
         }
         return maxProfit;
