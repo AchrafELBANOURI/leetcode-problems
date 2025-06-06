@@ -42,12 +42,23 @@ Located in [`java/Solution.java`](java/Solution.java)
 
 #### Approach
 
-<!-- Add Java solution approach here -->
+The Java solution uses two passes to calculate the product of the array except for the current element:
+
+1. Initialize a `result` array with all elements set to 1.
+2. Perform a forward pass:
+   - Use a variable `prec` to store the cumulative product of elements before the current index.
+   - Update `result[i]` with `prec` and multiply `prec` by `nums[i]`.
+3. Perform a backward pass:
+   - Use a variable `postc` to store the cumulative product of elements after the current index.
+   - Multiply `result[i]` by `postc` and update `postc` with `nums[i]`.
+4. Return the `result` array.
+
+This approach ensures that the space complexity remains constant, excluding the output array.
 
 #### Complexity Analysis
 
-- Time Complexity:
-- Space Complexity:
+- Time Complexity: O(n) - two passes through the array.
+- Space Complexity: O(1) - constant space used for variables.
 
 ### Python Solution
 
@@ -55,13 +66,24 @@ Located in [`python/solution.ipynb`](python/solution.ipynb)
 
 #### Approach
 
-<!-- Add Python solution approach here -->
+The Python solution uses two passes to calculate the product of the array except for the current element:
+
+1. Initialize a `result` list with all elements set to 1.
+2. Perform a forward pass:
+   - Use a variable `prec` to store the cumulative product of elements before the current index.
+   - Update `result[ind]` with `prec` and multiply `prec` by `nums[ind]`.
+3. Perform a backward pass:
+   - Use a variable `postc` to store the cumulative product of elements after the current index.
+   - Multiply `result[ind]` by `postc` and update `postc` with `nums[ind]`.
+4. Return the `result` list.
+
+This approach ensures that the space complexity remains constant, excluding the output list.
 
 #### Complexity Analysis
 
-- Time Complexity:
-- Space Complexity:
+- Time Complexity: O(n) - two passes through the array.
+- Space Complexity: O(1) - constant space used for variables.
 
 ## Notes/Explanation
 
-<!-- Add any additional notes or explanations here -->
+- Both solutions leverage the idea of prefix and suffix products to efficiently calculate the result without using division.
