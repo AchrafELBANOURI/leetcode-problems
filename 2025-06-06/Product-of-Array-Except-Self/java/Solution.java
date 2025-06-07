@@ -9,10 +9,10 @@ class Solution {
             result[i] = prec;
             prec *= nums[i];
         }
-        prec = 1;
+        int postc = 1;
         for(int i = nums.length - 1; i>=0  ;i--){
-            result[i] *= prec;
-            prec *= nums[i];
+            result[i] *= postc;
+            postc *= nums[i];
         }
         return result;
     }
