@@ -38,21 +38,22 @@ Explanation: The result cannot be 2, because [-2,-1] is not a contiguous subarra
 Located in [`java/Solution.java`](java/Solution.java)
 
 #### Approach
+The Java solution uses a single pass through the array to calculate the maximum product of a contiguous subarray. It maintains two variables, `maxSoFar` and `minSoFar`, to track the maximum and minimum products at each step. These are updated based on the current element and the previous products. The result is updated whenever a new maximum product is found.
 
 #### Complexity Analysis
-
-- Time Complexity: O(n) - we traverse the array once.
-- Space Complexity: O(1) - no additional space is used.
+- **Time Complexity:** O(n) - The array is traversed once.
+- **Space Complexity:** O(1) - No additional space is used.
 
 ### Python Solution
 
 Located in [`python/solution.ipynb`](python/solution.ipynb)
 
 #### Approach
+The Python solution follows a similar approach to the Java solution. It uses two variables, `maxProduct` and `minProduct`, to track the maximum and minimum products at each step. These are updated based on the current element and the previous products. The final result is updated whenever a new maximum product is found.
 
 #### Complexity Analysis
-
-- Time Complexity: O(n) - we traverse the array once.
-- Space Complexity: O(1) - no additional space is used.
+- **Time Complexity:** O(n) - The array is traversed once.
+- **Space Complexity:** O(1) - No additional space is used.
 
 ## Notes/Explanation
+Both solutions leverage the idea of maintaining the maximum and minimum products at each step to handle negative numbers effectively. This ensures that the algorithm can find the maximum product of a contiguous subarray even when negative numbers are involved.
