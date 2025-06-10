@@ -58,8 +58,20 @@ Explanation: The original array was [11,13,15,17] and it was rotated 4 times.
 Located in [`java/Solution.java`](java/Solution.java)
 
 #### Approach
+The Java solution uses a binary search algorithm to find the minimum element in the rotated sorted array:
 
-<!-- Add Java solution approach here -->
+1. Handle edge cases:
+   - If the array has only one element, return it.
+   - If the array is not rotated (i.e., the last element is greater than the first element), return the first element.
+
+2. Use binary search with two pointers (leftMost and rightMost):
+   - Calculate the middle index.
+   - Check if the middle element is greater than the element after it. If so, the element after the middle is the minimum.
+   - Check if the middle element is less than the element before it. If so, the middle element is the minimum.
+   - If the middle element is greater than the first element, search in the right half.
+   - Otherwise, search in the left half.
+
+3. If no minimum is found in the loop, return the element at the leftMost pointer.
 
 #### Complexity Analysis
 
@@ -71,8 +83,20 @@ Located in [`java/Solution.java`](java/Solution.java)
 Located in [`python/solution.ipynb`](python/solution.ipynb)
 
 #### Approach
+The Python solution follows the same binary search strategy as the Java solution:
 
-<!-- Add Python solution approach here -->
+1. Handle edge cases:
+   - If the array has only one element, return it.
+   - If the array is not rotated, return the first element.
+
+2. Use binary search with two pointers (leftMost and rightMost):
+   - Calculate the middle index.
+   - Check if the middle element is greater than the element after it. If so, return the element after the middle.
+   - Check if the middle element is less than the element before it. If so, return the middle element.
+   - If the middle element is greater than the first element, search in the right half.
+   - Otherwise, search in the left half.
+
+3. If no minimum is found in the loop, return the element at the leftMost pointer.
 
 #### Complexity Analysis
 
@@ -80,5 +104,14 @@ Located in [`python/solution.ipynb`](python/solution.ipynb)
 - Space Complexity: O(1) - No additional space is used.
 
 ## Notes/Explanation
+The key insight in this problem is that in a rotated sorted array, the minimum element is the only one that is smaller than both its neighbors (with appropriate checks for array boundaries). This property allows us to use binary search to efficiently find the minimum element.
 
-<!-- Add any additional notes or explanations here -->
+When comparing the middle element with its neighbors:
+- If the middle element is greater than the next element, the next element is the minimum.
+- If the middle element is less than the previous element, the middle element is the minimum.
+
+Additionally, we can determine which half of the array to search by comparing the middle element with the first element:
+- If the middle element is greater than the first element, the minimum must be in the right half.
+- Otherwise, the minimum must be in the left half.
+
+Both the Java and Python solutions achieve the optimal O(log n) time complexity required by the problem statement.
