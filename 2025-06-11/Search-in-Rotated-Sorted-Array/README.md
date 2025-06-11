@@ -53,7 +53,20 @@ Located in [`java/Solution.java`](java/Solution.java)
 
 #### Approach
 
-<!-- Add Java solution approach here -->
+The Java solution implements a binary search algorithm specifically adapted for rotated sorted arrays:
+
+1. Initialize left (`l`) and right (`r`) pointers to the start and end of the array.
+2. Within each iteration of the binary search:
+   - Calculate the middle index (`m`).
+   - If the middle element equals the target, return the index.
+   - Determine which half of the array is sorted:
+     - If the left half is sorted (`nums[m] >= nums[l]`):
+       - Check if the target is in the left sorted half (`nums[l] <= target && target < nums[m]`).
+       - If so, search in the left half; otherwise, search in the right half.
+     - If the right half is sorted:
+       - Check if the target is in the right sorted half (`nums[m] < target && target <= nums[r]`).
+       - If so, search in the right half; otherwise, search in the left half.
+3. If the target is not found, return -1.
 
 #### Complexity Analysis
 
@@ -66,7 +79,23 @@ Located in [`python/solution.ipynb`](python/solution.ipynb)
 
 #### Approach
 
-<!-- Add Python solution approach here -->
+The Python solution follows a similar binary search strategy with these steps:
+
+1. Handle edge cases:
+   - If the array is empty, return -1.
+   - If the array has only one element, return 0 if it equals the target, otherwise -1.
+2. Initialize left and right pointers.
+3. Within each binary search iteration:
+   - Calculate the middle index.
+   - If the middle element equals the target, return the index.
+   - Determine which half of the array is sorted:
+     - If the left half is sorted (`nums[left] <= nums[mid]`):
+       - Check if the target is in the left sorted range.
+       - Adjust the search space accordingly.
+     - If the right half is sorted:
+       - Check if the target is in the right sorted range.
+       - Adjust the search space accordingly.
+4. If the target is not found, return -1.
 
 #### Complexity Analysis
 
@@ -75,4 +104,9 @@ Located in [`python/solution.ipynb`](python/solution.ipynb)
 
 ## Notes/Explanation
 
-<!-- Add any additional notes or explanations here -->
+The key insight for this problem is understanding that in a rotated sorted array, at least one half (left or right of the middle) must be sorted. This property allows us to determine which half to search by checking:
+
+1. Which half is sorted (comparing the middle element with the leftmost or rightmost elements).
+2. Whether the target is within the range of the sorted half.
+
+This approach maintains the O(log n) time complexity requirement while handling the challenges posed by the rotation of the array. Both the Java and Python solutions use a modified binary search that adapts to the rotation by first identifying the sorted section, then determining if the target lies within that section.
