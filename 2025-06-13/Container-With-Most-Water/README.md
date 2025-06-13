@@ -45,7 +45,13 @@ Located in [`java/Solution.java`](java/Solution.java)
 
 #### Approach
 
-<!-- Add Java solution approach here -->
+The Java solution uses the two-pointer technique:
+1. Start with two pointers, one at the beginning (`l = 0`) and one at the end (`r = height.length - 1`) of the array.
+2. Calculate the area between the lines at positions `l` and `r`.
+3. The area is determined by the minimum height of the two lines multiplied by the distance between them.
+4. To maximize the area, we move the pointer pointing to the shorter line inward (since moving the taller line would only decrease the area).
+5. Continue this process until the pointers meet.
+6. Keep track of the maximum area encountered during this process.
 
 #### Complexity Analysis
 
@@ -58,13 +64,16 @@ Located in [`python/solution.ipynb`](python/solution.ipynb)
 
 #### Approach
 
-<!-- Add Python solution approach here -->
+The Python solution also implements the two-pointer technique:
+1. Initialize two pointers, `l` at index 0 (left end) and `r` at index `len(height) - 1` (right end).
+2. Calculate the area between the two lines, which is min(height[l], height[r]) * (r - l).
+3. Track the maximum area found during the traversal.
+4. At each step, move the pointer that points to the shorter line inward:
+   - If height[l] <= height[r], move left pointer rightward (l += 1)
+   - If height[l] > height[r], move right pointer leftward (r -= 1)
+5. Continue until the pointers meet.
 
 #### Complexity Analysis
 
 - Time Complexity: O(n) - We need to scan the array once.
 - Space Complexity: O(1) - We use only constant extra space.
-
-## Notes/Explanation
-
-<!-- Add any additional notes or explanations here -->
