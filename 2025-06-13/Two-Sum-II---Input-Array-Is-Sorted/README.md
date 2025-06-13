@@ -56,7 +56,16 @@ Located in [`java/Solution.java`](java/Solution.java)
 
 #### Approach
 
-<!-- Add Java solution approach here -->
+The Java solution uses a two-pointer approach to find the two numbers that sum to the target:
+
+1. Initialize two pointers: left (`l`) at the beginning of the array and right (`r`) at the end.
+2. In a loop, calculate the sum of the elements at these two pointers.
+3. If the sum equals the target, return the indices (adding 1 to convert to 1-indexed).
+4. If the sum is less than the target, increment the left pointer to increase the sum.
+5. If the sum is greater than the target, decrement the right pointer to decrease the sum.
+6. Continue until a match is found or the pointers cross.
+
+This approach takes advantage of the array being sorted in non-decreasing order.
 
 #### Complexity Analysis
 
@@ -69,7 +78,14 @@ Located in [`python/solution.ipynb`](python/solution.ipynb)
 
 #### Approach
 
-<!-- Add Python solution approach here -->
+The Python solution follows the same two-pointer technique as the Java solution:
+
+1. Initialize left (`l`) at index 0 and right (`r`) at the last index of the array.
+2. In a while loop, compare the sum of elements at these pointers with the target:
+   - If the sum equals the target, return the indices (adding 1 to make them 1-indexed).
+   - If the sum is less than the target, move the left pointer rightward to increase the sum.
+   - If the sum is greater than the target, move the right pointer leftward to decrease the sum.
+3. If no solution is found (which should not happen per the problem constraints), return an empty array.
 
 #### Complexity Analysis
 
@@ -78,4 +94,9 @@ Located in [`python/solution.ipynb`](python/solution.ipynb)
 
 ## Notes/Explanation
 
-<!-- Add any additional notes or explanations here -->
+The two-pointer technique is particularly effective for this problem because the input array is already sorted. This allows us to make efficient decisions about which pointer to move based on the current sum:
+
+1. If the sum is too small, we need a larger number, so we move the left pointer rightward.
+2. If the sum is too large, we need a smaller number, so we move the right pointer leftward.
+
+This approach guarantees finding the solution in a single pass through the array, making it more efficient than alternatives like using a hash map (which would be O(n) space) or nested loops (which would be O(n²) time).
