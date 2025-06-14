@@ -47,12 +47,26 @@ Located in [`java/Solution.java`](java/Solution.java)
 
 #### Approach
 
-<!-- Add Java solution approach here -->
+The Java solution uses bit manipulation to reverse the bits of a 32-bit unsigned integer:
+
+```java
+public int reverseBits(int n) {
+    int result = 0;
+    for (int i = 0; i < 32; i++) {
+        result = result << 1; // Shift result left to make room
+        result = result | (n & 1); // Add the last bit of n
+        n = n >>> 1; // Shift n right (unsigned)
+    }
+    return result;
+}
+```
+
+This approach processes each bit of the input integer `n` from right to left, adding it to the result in reverse order.
 
 #### Complexity Analysis
 
-- Time Complexity: O(1) - We always process a fixed number of bits (32-bit integer).
-- Space Complexity: O(1) - We only use a constant amount of extra space.
+- **Time Complexity**: O(1) - The loop always runs 32 times, regardless of the input.
+- **Space Complexity**: O(1) - Only a constant amount of extra space is used.
 
 ### Python Solution
 
@@ -60,13 +74,18 @@ Located in [`python/solution.ipynb`](python/solution.ipynb)
 
 #### Approach
 
-<!-- Add Python solution approach here -->
+The Python solution leverages string manipulation to reverse the bits of a 32-bit unsigned integer:
+
+```python
+def reverseBits(self, n: int) -> int:
+    n_rev = bin(n)[2:].zfill(32)[::-1]  # Convert to binary, pad to 32 bits, and reverse
+    n = int(n_rev, base=2)  # Convert back to integer
+    return n
+```
+
+This approach converts the integer to its binary representation, reverses the string, and converts it back to an integer.
 
 #### Complexity Analysis
 
-- Time Complexity: O(1) - We always process a fixed number of bits (32-bit integer).
-- Space Complexity: O(1) - We only use a constant amount of extra space.
-
-## Notes/Explanation
-
-<!-- Add any additional notes or explanations here -->
+- **Time Complexity**: O(1) - The operations on a fixed-length (32-bit) string are constant time.
+- **Space Complexity**: O(1) - Only a constant amount of extra space is used.
