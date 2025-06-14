@@ -45,12 +45,26 @@ Located in [`java/Solution.java`](java/Solution.java)
 
 #### Approach
 
-<!-- Add Java solution approach here -->
+The Java solution uses a dynamic programming approach. An array `prev` is used to store the number of ways to reach each step. For steps 0 to 3, the values are initialized directly since they are straightforward. For steps greater than 3, the value is calculated as the sum of the ways to reach the two previous steps (`prev[i-1] + prev[i-2]`).
+
+```java
+public int climbStairs(int n) {
+    int[] prev = new int[n+1];
+    for(int i = 0; i < n+1; i++) {
+        if (i < 4) {
+            prev[i] = i;
+        } else {
+            prev[i] = prev[i-1] + prev[i-2];
+        }
+    }
+    return prev[n];
+}
+```
 
 #### Complexity Analysis
 
 - **Time Complexity**: O(n) - We compute the result for each step from 1 to n.
-- **Space Complexity**: O(1) - Only a constant amount of extra space is used for variables.
+- **Space Complexity**: O(n) - An array of size n+1 is used to store intermediate results.
 
 ### Python Solution
 
@@ -58,13 +72,34 @@ Located in [`python/solution.ipynb`](python/solution.ipynb)
 
 #### Approach
 
-<!-- Add Python solution approach here -->
+The Python solution also uses a dynamic programming approach. A list `prev_steps` is initialized to store the number of ways to reach each step. For steps 0 to 3, the values are directly assigned. For steps greater than 3, the value is calculated as the sum of the ways to reach the two previous steps (`prev_steps[i-1] + prev_steps[i-2]`).
+
+```python
+def climbStairs(n: int) -> int:
+    prev_steps = [i for i in range(n+1)]
+    for i in range(4, n+1):
+        prev_steps[i] = prev_steps[i-1] + prev_steps[i-2]
+    return prev_steps[n]
+```
 
 #### Complexity Analysis
 
 - **Time Complexity**: O(n) - We compute the result for each step from 1 to n.
-- **Space Complexity**: O(1) - Only a constant amount of extra space is used for variables.
+- **Space Complexity**: O(n) - A list of size n+1 is used to store intermediate results.
 
 ## Notes/Explanation
 
-<!-- Add any additional notes or explanations here -->
+This implementation is another approach to solving the problem, which I liked the most even better than mine. It uses two variables instead of an array to store intermediate results, achieving the same time complexity of O(n) but with a space complexity of O(1):
+
+```java
+public int climbStairs(int n) {
+    int one = 1;
+    int two = 1;
+    for (int i = 1; i < n; i++) {
+        int temp = one;
+        one = one + two;
+        two = temp;
+    }
+    return one;
+}
+```
