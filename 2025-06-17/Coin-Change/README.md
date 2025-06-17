@@ -64,7 +64,7 @@ Located in [`java/Solution.java`](java/Solution.java)
 
 #### Approach
 
-<!-- Add Java solution approach here -->
+The Java solution uses a dynamic programming approach. An array `arr` is initialized with a size of `amount + 1` and filled with a value of `amount + 1` to represent an unreachable state. The value at index 0 is set to 0, as no coins are needed to make an amount of 0. For each coin in the `coins` array, the algorithm iterates through all amounts from the coin's value to `amount`, updating the minimum number of coins required to make up that amount.
 
 #### Complexity Analysis
 
@@ -77,13 +77,9 @@ Located in [`python/solution.ipynb`](python/solution.ipynb)
 
 #### Approach
 
-<!-- Add Python solution approach here -->
+The Python solution also uses a dynamic programming approach. A list `arr` is initialized with a size of `amount + 1` and filled with a value of `amount + 1` to represent an unreachable state. The value at index 0 is set to 0, as no coins are needed to make an amount of 0. For each coin in the `coins` list, the algorithm iterates through all amounts from the coin's value to `amount`, updating the minimum number of coins required to make up that amount.
 
 #### Complexity Analysis
 
 - **Time Complexity**: O(amount * coins.length) - For each amount from 0 to `amount`, we iterate through all the coins to find the minimum number of coins required.
 - **Space Complexity**: O(amount) - We use a DP array of size `amount + 1` to store intermediate results.
-
-## Notes/Explanation
-
-<!-- Add any additional notes or explanations here -->
