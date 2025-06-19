@@ -49,12 +49,12 @@ Located in [`java/Solution.java`](java/Solution.java)
 
 #### Approach
 
-<!-- Add Java solution approach here -->
+The Java solution uses a dynamic programming approach. A 2D array `dp` is initialized with dimensions `(n1+1) x (n2+1)` where `n1` and `n2` are the lengths of `text1` and `text2`, respectively. The algorithm iterates through the strings in reverse order, comparing characters and updating the `dp` array based on whether the characters match or not. The value at `dp[0][0]` represents the length of the longest common subsequence.
 
 #### Complexity Analysis
 
-- Time Complexity: O(n * m) - Where `n` is the length of `text1` and `m` is the length of `text2`. We iterate through all characters of both strings to compute the LCS.
-- Space Complexity: O(n * m) - We use a 2D DP array of size `n x m` to store intermediate results.
+- **Time Complexity**: O(n * m) - Where `n` is the length of `text1` and `m` is the length of `text2`. We iterate through all characters of both strings to compute the LCS.
+- **Space Complexity**: O(n * m) - We use a 2D DP array of size `n x m` to store intermediate results.
 
 ### Python Solution
 
@@ -62,12 +62,12 @@ Located in [`python/solution.ipynb`](python/solution.ipynb)
 
 #### Approach
 
-<!-- Add Python solution approach here -->
+The Python solution also uses a dynamic programming approach. A 2D list `dp` is initialized with dimensions `(n1+1) x (n2+1)` where `n1` and `n2` are the lengths of `text1` and `text2`, respectively. The algorithm iterates through the strings in reverse order, comparing characters and updating the `dp` list based on whether the characters match or not. The value at `dp[0][0]` represents the length of the longest common subsequence.
 
 #### Complexity Analysis
 
-- Time Complexity: O(n * m) - Where `n` is the length of `text1` and `m` is the length of `text2`. We iterate through all characters of both strings to compute the LCS.
-- Space Complexity: O(n * m) - We use a 2D DP array of size `n x m` to store intermediate results.
+- **Time Complexity**: O(n * m) - Where `n` is the length of `text1` and `m` is the length of `text2`. We iterate through all characters of both strings to compute the LCS.
+- **Space Complexity**: O(n * m) - We use a 2D DP list of size `n x m` to store intermediate results.
 
 ## Notes/Explanation
 
