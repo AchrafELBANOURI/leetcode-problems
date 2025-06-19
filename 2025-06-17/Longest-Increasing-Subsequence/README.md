@@ -47,11 +47,11 @@ Located in [`java/Solution.java`](java/Solution.java)
 
 #### Approach
 
-<!-- Add Java solution approach here -->
+The Java solution uses a dynamic programming approach. An array `LIS` is initialized with a size equal to the length of the input array `nums` and filled with 1, representing the minimum length of the subsequence ending at each index. The algorithm iterates through the array in reverse order, updating the `LIS` values based on the elements that follow each index. The maximum value in the `LIS` array is returned as the result.
 
 #### Complexity Analysis
 
-- **Time Complexity**: O(n^2) - For each element in the array, we iterate through all previous elements to find the longest increasing subsequence.
+- **Time Complexity**: O(n^2) - For each element in the array, we iterate through all subsequent elements to find the longest increasing subsequence.
 - **Space Complexity**: O(n) - We use a DP array of size `n` to store the length of the longest increasing subsequence ending at each index.
 
 ### Python Solution
@@ -60,13 +60,33 @@ Located in [`python/solution.ipynb`](python/solution.ipynb)
 
 #### Approach
 
-<!-- Add Python solution approach here -->
+The Python solution also uses a dynamic programming approach. A list `LIS` is initialized with a size equal to the length of the input list `nums` and filled with 1, representing the minimum length of the subsequence ending at each index. The algorithm iterates through the list in reverse order, updating the `LIS` values based on the elements that follow each index. The maximum value in the `LIS` list is returned as the result.
 
 #### Complexity Analysis
 
-- **Time Complexity**: O(n^2) - For each element in the array, we iterate through all previous elements to find the longest increasing subsequence.
+- **Time Complexity**: O(n^2) - For each element in the array, we iterate through all subsequent elements to find the longest increasing subsequence.
 - **Space Complexity**: O(n) - We use a DP array of size `n` to store the length of the longest increasing subsequence ending at each index.
 
 ## Notes/Explanation
 
-<!-- Add any additional notes or explanations here -->
+Another approach to solving the Longest Increasing Subsequence problem is using **Patience Sorting**. This method involves maintaining a list of piles where each pile represents the smallest possible ending value of an increasing subsequence of a given length. The algorithm uses binary search to efficiently place each element in the correct pile, resulting in a time complexity of O(n log n) and a space complexity of O(n).
+
+Here is the code for the Patience Sorting approach in Python:
+
+```python
+from bisect import bisect_left
+
+def lengthOfLIS(nums):
+    piles = []
+    for num in nums:
+        pos = bisect_left(piles, num)
+        if pos == len(piles):
+            piles.append(num)
+        else:
+            piles[pos] = num
+    return len(piles)
+```
+
+### Explanation of `bisect_left`
+
+The `bisect_left` function is part of Python's `bisect` module. It performs a binary search on a sorted list and returns the index where a given element should be inserted to maintain the sorted order. If the element already exists in the list, it returns the index of the first occurrence of the element. This makes it useful for efficiently finding the position to update or extend the piles in the Patience Sorting algorithm.
