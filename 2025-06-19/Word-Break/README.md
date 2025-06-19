@@ -51,12 +51,12 @@ Located in [`java/Solution.java`](java/Solution.java)
 
 #### Approach
 
-<!-- Add Java solution approach here -->
+The Java solution uses a dynamic programming approach. A boolean array `dp` is initialized with a size of `s.length() + 1`. The value at `dp[s.length()]` is set to `true`, representing the base case where an empty string can always be segmented. The algorithm iterates through the string in reverse order, checking substrings against the dictionary and updating the `dp` array based on whether the substring matches a word in the dictionary. The value at `dp[0]` represents whether the entire string can be segmented.
 
 #### Complexity Analysis
 
-- Time Complexity: O(n * m) - Where `n` is the length of `s` and `m` is the average length of words in `wordDict`. We iterate through the string and check substrings against the dictionary.
-- Space Complexity: O(n) - We use a DP array of size `n` to store intermediate results.
+- **Time Complexity**: O(n * m) - Where `n` is the length of `s` and `m` is the average length of `wordDict`. We iterate through the string and check substrings against the dictionary.
+- **Space Complexity**: O(n) - We use a DP array of size `n` to store intermediate results.
 
 ### Python Solution
 
@@ -64,13 +64,9 @@ Located in [`python/solution.ipynb`](python/solution.ipynb)
 
 #### Approach
 
-<!-- Add Python solution approach here -->
+The Python solution also uses a dynamic programming approach. A boolean list `dp` is initialized with a size of `len(s) + 1`. The value at `dp[-1]` is set to `True`, representing the base case where an empty string can always be segmented. The algorithm iterates through the string in reverse order, checking substrings against the dictionary and updating the `dp` list based on whether the substring matches a word in the dictionary. The value at `dp[0]` represents whether the entire string can be segmented.
 
 #### Complexity Analysis
 
-- Time Complexity: O(n * m) - Where `n` is the length of `s` and `m` is the average length of words in `wordDict`. We iterate through the string and check substrings against the dictionary.
-- Space Complexity: O(n) - We use a DP array of size `n` to store intermediate results.
-
-## Notes/Explanation
-
-<!-- Add any additional notes or explanations here -->
+- **Time Complexity**: O(n * m) - Where `n` is the length of `s` and `m` is the average length of `wordDict`. We iterate through the string and check substrings against the dictionary.
+- **Space Complexity**: O(n) - We use a DP list of size `n` to store intermediate results.
