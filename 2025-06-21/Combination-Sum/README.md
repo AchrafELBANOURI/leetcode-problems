@@ -53,12 +53,12 @@ Located in [`java/Solution.java`](java/Solution.java)
 
 #### Approach
 
-<!-- Add Java solution approach here -->
+This solution uses backtracking to explore all possible combinations of candidates that sum up to the target. The candidates array is first sorted to optimize pruning. At each recursive call, the algorithm tries to include each candidate (starting from the current index, allowing repeated use) and recurses with the reduced target. If the target becomes zero, the current path is added to the result. If a candidate exceeds the remaining target, the branch is pruned. The recursion backtracks after each attempt to explore other possibilities.
 
 #### Complexity Analysis
 
-- **Time Complexity**: O(2^target) in the worst case, as each number can be used multiple times.
-- **Space Complexity**: O(target) for the recursion stack.
+- **Time Complexity**: O(2^target) in the worst case, as each number can be used multiple times and the number of combinations grows exponentially with the target.
+- **Space Complexity**: O(target) for the recursion stack and path storage.
 
 ### Python Solution
 
@@ -66,13 +66,16 @@ Located in [`python/solution.ipynb`](python/solution.ipynb)
 
 #### Approach
 
-<!-- Add Python solution approach here -->
+The Python solution also uses backtracking. It recursively builds combinations by adding candidates to the current path and reducing the target. If the target reaches zero, the current combination is valid and added to the result. The function backtracks after each recursive call to explore other combinations. Sorting the candidates can help with early pruning, but is not strictly necessary for correctness.
 
 #### Complexity Analysis
 
-- **Time Complexity**: O(2^target) in the worst case, as each number can be used multiple times.
-- **Space Complexity**: O(target) for the recursion stack.
+- **Time Complexity**: O(2^target) in the worst case, as each number can be used multiple times and the number of combinations grows exponentially with the target.
+- **Space Complexity**: O(target) for the recursion stack and path storage.
 
 ## Notes/Explanation
 
-<!-- Add any additional notes or explanations here -->
+- The backtracking approach efficiently explores all possible combinations by pruning branches where the sum exceeds the target.
+- The same candidate can be chosen multiple times, so the recursive call does not increment the index.
+- Sorting the candidates helps with early stopping and can improve performance in practice.
+- The number of unique combinations is guaranteed to be less than 150 for the given constraints, so this approach is efficient enough for the problem limits.
