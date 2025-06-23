@@ -62,12 +62,12 @@ Located in [`java/Solution.java`](java/Solution.java)
 
 #### Approach
 
-<!-- Add Java solution approach here -->
+The Java solution uses a dynamic programming approach with two variables (`dp1` and `dp2`) to store intermediate results. Starting from the end of the string, it iterates backward, checking if the current character is valid (not '0') and whether the two-character substring forms a valid encoding (between 10 and 26). The results are accumulated in `dp1` and `dp2` to calculate the total number of decoding ways.
 
 #### Complexity Analysis
 
 - **Time Complexity**: O(n), where n is the length of the string. Each character is processed once.
-- **Space Complexity**: O(n), for the DP array used to store intermediate results.
+- **Space Complexity**: O(1), as only two variables are used for intermediate results.
 
 ### Python Solution
 
@@ -75,9 +75,9 @@ Located in [`python/solution.ipynb`](python/solution.ipynb)
 
 #### Approach
 
-<!-- Add Python solution approach here -->
+The Python solution also employs a dynamic programming approach. It uses a similar logic to the Java solution, iterating through the string and maintaining two variables to store the number of decoding ways for the current and previous positions. The solution handles edge cases like leading zeros and invalid two-character substrings.
 
 #### Complexity Analysis
 
 - **Time Complexity**: O(n), where n is the length of the string. Each character is processed once.
-- **Space Complexity**: O(n), for the DP array used to store intermediate results.
+- **Space Complexity**: O(1), as only two variables are used for intermediate results.
