@@ -46,7 +46,7 @@ Located in [`java/Solution.java`](java/Solution.java)
 
 #### Approach
 
-<!-- Add Java solution approach here -->
+This solution uses dynamic programming with constant space. Since the houses are arranged in a circle, the problem is divided into two subproblems: robbing houses from the second to the last house, and robbing houses from the first to the second-to-last house. The maximum of these two results is the final answer. Two variables are used to keep track of the maximum money that can be robbed for each subproblem, avoiding the need for extra arrays.
 
 #### Complexity Analysis
 
@@ -59,13 +59,9 @@ Located in [`python/solution.ipynb`](python/solution.ipynb)
 
 #### Approach
 
-<!-- Add Python solution approach here -->
+The Python solution also uses dynamic programming with constant space. It calculates the maximum money that can be robbed in two scenarios: excluding the first house and excluding the last house. For each scenario, it iterates through the respective range of houses, maintaining two variables to store the results for the next and next-plus-one houses. The final result is the maximum of the two scenarios.
 
 #### Complexity Analysis
 
 - **Time Complexity**: O(n), where n is the number of houses. Each house is visited once.
 - **Space Complexity**: O(1), as the solution uses constant extra space.
-
-## Notes/Explanation
-
-<!-- Add any additional notes or explanations here -->
