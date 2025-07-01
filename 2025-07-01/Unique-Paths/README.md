@@ -45,7 +45,7 @@ Located in [`java/Solution.java`](java/Solution.java)
 
 #### Approach
 
-<!-- Add Java solution approach here -->
+The Java solution uses a dynamic programming approach with a 2D array (`dp`) to store intermediate results. Starting from the bottom-right corner of the grid, it iterates backward, calculating the number of unique paths for each cell based on the paths from the cell below and the cell to the right. Edge cases like single-row or single-column grids are handled by initializing the last row and column with 1.
 
 #### Complexity Analysis
 
@@ -58,13 +58,9 @@ Located in [`python/solution.ipynb`](python/solution.ipynb)
 
 #### Approach
 
-<!-- Add Python solution approach here -->
+The Python solution also employs a dynamic programming approach. It uses a similar logic to the Java solution, iterating through the grid and maintaining a 2D array to store the number of unique paths for each cell. The solution handles edge cases like single-row or single-column grids by initializing the last row and column with 1.
 
 #### Complexity Analysis
 
 - **Time Complexity**: O(m * n), where m and n are the dimensions of the grid. Each cell is computed once.
 - **Space Complexity**: O(m * n), for the DP table used to store intermediate results.
-
-## Notes/Explanation
-
-<!-- Add any additional notes or explanations here -->
