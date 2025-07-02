@@ -39,7 +39,7 @@ Located in [`java/Solution.java`](java/Solution.java)
 
 #### Approach
 
-<!-- Add Java solution approach here -->
+The Java solution uses a greedy approach to solve the problem. Starting from the second-to-last index, it iterates backward through the array, checking if the current index can reach the `goal` index. If it can, the `goal` is updated to the current index. The process continues until the first index is reached, and the function returns whether the `goal` is equal to 0.
 
 #### Complexity Analysis
 
@@ -52,13 +52,9 @@ Located in [`python/solution.ipynb`](python/solution.ipynb)
 
 #### Approach
 
-<!-- Add Python solution approach here -->
+The Python solution also employs a greedy approach. It uses a similar logic to the Java solution, iterating backward through the array and updating the `goal` index whenever the current index can reach it. The function returns whether the `goal` is equal to 0 after processing all elements.
 
 #### Complexity Analysis
 
 - **Time Complexity**: O(n), where n is the length of the array. Each element is processed once.
 - **Space Complexity**: O(1), as no additional space is used.
-
-## Notes/Explanation
-
-<!-- Add any additional notes or explanations here -->
