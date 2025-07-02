@@ -48,7 +48,7 @@ Located in [`java/Solution.java`](java/Solution.java)
 
 #### Approach
 
-<!-- Add Java solution approach here -->
+The Java solution uses a sorting-based approach to solve the problem. First, the array is sorted in ascending order. Then, starting from the second-to-last element, it iterates backward through the array, counting the reduction operations needed whenever the current element is different from the next element. The total number of operations is accumulated and returned.
 
 #### Complexity Analysis
 
@@ -61,13 +61,9 @@ Located in [`python/solution.ipynb`](python/solution.ipynb)
 
 #### Approach
 
-<!-- Add Python solution approach here -->
+The Python solution also employs a sorting-based approach. It uses a similar logic to the Java solution, iterating backward through the sorted array and counting the reduction operations needed whenever the current element is different from the next element. The total number of operations is accumulated and returned.
 
 #### Complexity Analysis
 
 - **Time Complexity**: O(n log n), where n is the length of the array. Sorting the array takes O(n log n), and the reduction operations are performed in O(n).
 - **Space Complexity**: O(1), as no additional space is used.
-
-## Notes/Explanation
-
-<!-- Add any additional notes or explanations here -->
