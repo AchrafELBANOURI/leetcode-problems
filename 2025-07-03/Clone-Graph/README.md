@@ -53,7 +53,7 @@ Located in [`java/Solution.java`](java/Solution.java)
 
 #### Approach
 
-<!-- Add Java solution approach here -->
+The Java solution uses a depth-first search (DFS) approach to clone the graph. It employs a hash map to store the mapping between original nodes and their cloned counterparts. Starting from the given node, it recursively clones each neighbor and adds them to the cloned node's neighbors list. The hash map ensures that each node is cloned only once.
 
 #### Complexity Analysis
 
@@ -66,13 +66,9 @@ Located in [`python/solution.ipynb`](python/solution.ipynb)
 
 #### Approach
 
-<!-- Add Python solution approach here -->
+The Python solution also employs a depth-first search (DFS) approach. It uses a hash map to store the mapping between original nodes and their cloned counterparts. Starting from the given node, it recursively clones each neighbor and adds them to the cloned node's neighbors list. The hash map ensures that each node is cloned only once.
 
 #### Complexity Analysis
 
 - **Time Complexity**: O(V + E), where V is the number of vertices and E is the number of edges. Each node and edge is visited once.
 - **Space Complexity**: O(V), for the hash map used to store visited nodes.
-
-## Notes/Explanation
-
-<!-- Add any additional notes or explanations here -->
