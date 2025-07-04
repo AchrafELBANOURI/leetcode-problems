@@ -41,7 +41,7 @@ Located in [`java/Solution.java`](java/Solution.java)
 
 #### Approach
 
-<!-- Add Java solution approach here -->
+The Java solution iterates through the string `s` and calculates the score by summing the absolute differences between the ASCII values of adjacent characters.
 
 #### Complexity Analysis
 
@@ -54,13 +54,9 @@ Located in [`python/solution.ipynb`](python/solution.ipynb)
 
 #### Approach
 
-<!-- Add Python solution approach here -->
+The Python solution defines a function `scoreOfString` that calculates the score by iterating through the string and summing the absolute differences between the ASCII values of adjacent characters.
 
 #### Complexity Analysis
 
 - **Time Complexity**: O(n), where n is the length of the string. Each pair of adjacent characters is processed once.
 - **Space Complexity**: O(1), as no additional space is used.
-
-## Notes/Explanation
-
-<!-- Add any additional notes or explanations here -->
