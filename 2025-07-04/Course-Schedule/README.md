@@ -42,7 +42,7 @@ Located in [`java/Solution.java`](java/Solution.java)
 
 #### Approach
 
-<!-- Add Java solution approach here -->
+The Java solution uses a depth-first search (DFS) approach to detect cycles in the course dependency graph. It maintains a visited set to track courses currently being visited and an adjacency list to represent prerequisites.
 
 #### Complexity Analysis
 
@@ -55,9 +55,9 @@ Located in [`python/solution.ipynb`](python/solution.ipynb)
 
 #### Approach
 
-<!-- Add Python solution approach here -->
+The Python solution implements a DFS-based approach, using recursion to check for cycles and clear dependencies once a course is processed.
 
 #### Complexity Analysis
 
 - **Time Complexity**: O(V + E), where V is the number of courses and E is the number of prerequisites.
-- **Space Complexity**: O(V + E), for the adjacency list and visited array.
+- **Space Complexity**: O(V + E), for the adjacency list and visited set.
