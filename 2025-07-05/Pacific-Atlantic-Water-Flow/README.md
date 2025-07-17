@@ -41,7 +41,7 @@ Located in [`java/Solution.java`](java/Solution.java)
 
 #### Approach
 
-<!-- Add Java solution approach here -->
+The Java solution uses a depth-first search (DFS) approach to explore the matrix. It maintains two sets to track cells that can flow to the Pacific and Atlantic oceans, respectively.
 
 #### Complexity Analysis
 
@@ -54,13 +54,9 @@ Located in [`python/solution.ipynb`](python/solution.ipynb)
 
 #### Approach
 
-<!-- Add Python solution approach here -->
+The Python solution implements a similar DFS-based approach, iterating through the matrix to identify cells that meet the criteria for both oceans.
 
 #### Complexity Analysis
 
 - **Time Complexity**: O(m * n), where m and n are the dimensions of the matrix.
 - **Space Complexity**: O(m * n), for the visited arrays and recursion stack.
-
-## Notes/Explanation
-
-<!-- Add any additional notes or explanations here -->
