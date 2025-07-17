@@ -49,12 +49,12 @@ Located in [`java/Solution.java`](java/Solution.java)
 
 #### Approach
 
-<!-- Add Java solution approach here -->
+The Java solution uses Depth-First Search (DFS) to traverse the grid. A `visitedSet` is used to keep track of visited cells. For each unvisited land cell ('1'), the DFS explores all connected land cells, marking them as visited. The number of islands is incremented for each DFS initiation.
 
 #### Complexity Analysis
 
-- **Time Complexity**: O(m * n), where m and n are the dimensions of the grid.
-- **Space Complexity**: O(m * n), for the visited array and recursion stack.
+- **Time Complexity**: O(m * n), where m and n are the dimensions of the grid. Each cell is visited once.
+- **Space Complexity**: O(m * n), for the `visitedSet` and recursion stack.
 
 ### Python Solution
 
@@ -62,13 +62,9 @@ Located in [`python/solution.ipynb`](python/solution.ipynb)
 
 #### Approach
 
-<!-- Add Python solution approach here -->
+The Python solution also employs Depth-First Search (DFS). A `visited_set` is used to track visited cells. For each unvisited land cell ('1'), the DFS explores all connected land cells, marking them as visited. The number of islands is incremented for each DFS initiation.
 
 #### Complexity Analysis
 
-- **Time Complexity**: O(m * n), where m and n are the dimensions of the grid.
-- **Space Complexity**: O(m * n), for the visited array and recursion stack.
-
-## Notes/Explanation
-
-<!-- Add any additional notes or explanations here -->
+- **Time Complexity**: O(m * n), where m and n are the dimensions of the grid. Each cell is visited once.
+- **Space Complexity**: O(m * n), for the `visited_set` and recursion stack.
