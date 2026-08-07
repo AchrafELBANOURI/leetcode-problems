@@ -13,23 +13,15 @@ class Solution {
             if(values.isEmpty()){
                 return null;
             }
-
-            List<ListNode> nodes = new ArrayList<>(values.size());
-            // First every element on the list should be a ListNode rather than Integer
-            int i = 0;
-            while(i<values.size()){
-                nodes.add(new ListNode(values.get(i++),null));
-            }
-
-            // Second set next node of each node on nodes list to the next node on nodes list
-            i = 0;
-            while(i<nodes.size()-1){
-                nodes.get(i).next = nodes.get(i+1);
-                i++;
-            }
             
-            // return the first index ( head / parent node )
-            return nodes.get(0);
+            int i = values.size() - 1 ;
+            ListNode node = null;
+            while(i >= 0){
+                ListNode currNode = new ListNode(values.get(i--) , node);
+                node = currNode;
+            }
+
+            return node;
         }
 
         public static List<Integer> tearDown( ListNode head ){
