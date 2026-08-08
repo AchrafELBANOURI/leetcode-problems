@@ -1,3 +1,5 @@
+import utilities.TestUtils;
+
 class Solution {
     public String longestCommonPrefix(String[] strs) {
         if (strs == null || strs.length == 0) {
@@ -18,27 +20,19 @@ class Solution {
 
         return pref;
     }
-
-    private static void assertTest(String expected, String actual, String testName) {
-        if (expected.equals(actual)) {
-            System.out.println("PASS: " + testName);
-        } else {
-            System.out.printf("FAIL: %s | Expected: \"%s\", Got: \"%s\"%n", testName, expected, actual);
-        }
-    }
     
     public static void main(String[] args) {
         Solution sol = new Solution();
-
+        
         // Test 1
-        assertTest(
+        TestUtils.assertTest(
             "fl", 
             sol.longestCommonPrefix(new String[]{"flower", "flow", "flight"}),
             "Test Case 1"
         );
 
         // Test 2
-        assertTest(
+        TestUtils.assertTest(
             "", 
             sol.longestCommonPrefix(new String[]{"dog", "racecar", "car"}), 
             "Test Case 2"
