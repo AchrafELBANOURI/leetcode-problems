@@ -27,6 +27,11 @@ public class TestUtils {
         printResult(Objects.equals(expected, actual), expected, actual, testName);
     }
 
+    // 5. 2D Arrays
+    public static void assertTest(int[][] expected, int[][] actual, String testName) {
+        printResult(Arrays.deepEquals(expected, actual), Arrays.deepToString(expected), Arrays.deepToString(actual), testName);
+    }
+
     // Helper method to keep printing logic DRY
     private static void printResult(boolean passed, Object expected, Object actual, String testName) {
         if (passed) {
