@@ -1,3 +1,5 @@
+package removeElement;
+
 import utilities.TestUtils;
 
 class Solution {
