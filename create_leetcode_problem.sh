@@ -17,22 +17,38 @@ mkdir -p "$DATE_FOLDER/$PROBLEM_FOLDER"/{java,python}
 # Create the Java solution file
 cat > "$DATE_FOLDER/$PROBLEM_FOLDER/java/Solution.java" << 'EOF'
 import java.util.*;
+import utilities.TestUtils;
 
 class Solution {
     // TODO: Implement solution method here
     
     public static void main(String[] args) {
+        Solution sol = new Solution();
+
         // Test Case 1
-        System.out.println("Test Case 1:");
         // TODO: Add test case 1
+        Object input = null ;
+        Object output = null ;
+        Object expected = null ;
+
+        TestUtils.assertTest(
+            expected, 
+            output,
+            "Test Case 1"
+        );
         
         // Test Case 2
-        System.out.println("Test Case 2:");
         // TODO: Add test case 2
+        input = null;
+        output = null;
+        expected = null 
         
-        // Test Case 3
-        System.out.println("Test Case 3:");
-        // TODO: Add test case 3
+        TestUtils.assertTest(
+            expected, 
+            output,
+            "Test Case 2"
+        );
+        
     }
 }
 EOF
@@ -53,18 +69,19 @@ cat > "$DATE_FOLDER/$PROBLEM_FOLDER/python/solution.ipynb" << EOF
    "execution_count": null,
    "metadata": {},
    "source": [
-    "def two_sum(nums : list[int], target : int) -> list[int] :\\n",
-    "    # TODO: Implement solution here\\n",
-    "    pass"
+
+   "def assert_test(expected, actual, test_name: str):\\n",
+   "    if expected == actual:\\n",
+   "        print(f"PASS: {test_name}")\n",
+   "    else:\\n",
+   "        print(f"FAIL: {test_name} | Expected: '{expected}', Got: '{actual}'")\\n",
    ]
   },
   {
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "### **CASE 1 :**  \\n",
-    "> **Input:** \`nums = []\`, \`target = \`  \\n",
-    "> **Output:** \`[]\`"
+    "### **CASE 1 :**  \\n"
    ]
   },
   {
@@ -73,19 +90,17 @@ cat > "$DATE_FOLDER/$PROBLEM_FOLDER/python/solution.ipynb" << EOF
    "metadata": {},
    "source": [
     "# Test CASE 1\\n",
-    "nums = []\\n",
-    "target = 0\\n",
-    "output = two_sum(nums, target)\\n",
-    "print(output)  # Expected: []"
+    "input = None\\n",
+    "output = None\\n",
+    "expected = None\\n",
+    "assertTest(expected,output,"Test Case 1")"
    ]
   },
   {
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "### **CASE 2 :**  \\n",
-    "> **Input:** \`nums = []\`, \`target = \`  \\n",
-    "> **Output:** \`[]\`"
+    "### **CASE 2 :**  \\n"
    ]
   },
   {
@@ -94,19 +109,17 @@ cat > "$DATE_FOLDER/$PROBLEM_FOLDER/python/solution.ipynb" << EOF
    "metadata": {},
    "source": [
     "# Test CASE 2\\n",
-    "nums = []\\n",
-    "target = 0\\n",
-    "output = two_sum(nums, target)\\n",
-    "print(output)  # Expected: []"
+    "input = None\\n",
+    "output = None\\n",
+    "expected = None\\n",
+    "assertTest(expected,output,"Test Case 2")
    ]
   },
   {
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "### **CASE 3 :**  \\n",
-    "> **Input:** \`nums = []\`, \`target = \`  \\n",
-    "> **Output:** \`[]\`"
+    "### **CASE 3 :**  \\n"
    ]
   },
   {
@@ -115,10 +128,10 @@ cat > "$DATE_FOLDER/$PROBLEM_FOLDER/python/solution.ipynb" << EOF
    "metadata": {},
    "source": [
     "# Test CASE 3\\n",
-    "nums = []\\n",
-    "target = 0\\n",
-    "output = two_sum(nums, target)\\n",
-    "print(output)  # Expected: []"
+    "input = None\\n",
+    "output = None\\n",
+    "expected = None\\n",
+    "assertTest(expected,output,"Test Case 3")
    ]
   }
  ],
