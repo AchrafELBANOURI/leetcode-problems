@@ -44,7 +44,8 @@ wheels/
 *~
 .project
 .classpath
-.settings/
+.settings
+.memory
 
 # OS specific
 .DS_Store
