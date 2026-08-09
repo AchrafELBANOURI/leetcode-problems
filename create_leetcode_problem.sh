@@ -27,9 +27,9 @@ class Solution {
 
         // Test Case 1
         // TODO: Add test case 1
-        Object input = null ;
-        Object output = null ;
-        Object expected = null ;
+        Object input = null;
+        Object output = null;
+        Object expected = null;
 
         TestUtils.assertTest(
             expected, 
@@ -41,97 +41,105 @@ class Solution {
         // TODO: Add test case 2
         input = null;
         output = null;
-        expected = null 
+        expected = null;
         
         TestUtils.assertTest(
             expected, 
             output,
             "Test Case 2"
         );
-        
     }
 }
 EOF
 
 # Create the Jupyter notebook solution file
-cat > "$DATE_FOLDER/$PROBLEM_FOLDER/python/solution.ipynb" << EOF
+cat > "$DATE_FOLDER/$PROBLEM_FOLDER/python/solution.ipynb" << 'EOF'
 {
  "cells": [
   {
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "## **Solution Code :**"
+    "## **Setup & Solution Code:**"
    ]
   },
   {
    "cell_type": "code",
    "execution_count": null,
    "metadata": {},
+   "outputs": [],
    "source": [
-
-   "def assert_test(expected, actual, test_name: str):\\n",
-   "    if expected == actual:\\n",
-   "        print(f"PASS: {test_name}")\n",
-   "    else:\\n",
-   "        print(f"FAIL: {test_name} | Expected: '{expected}', Got: '{actual}'")\\n",
+    "from typing import List\n",
+    "\n",
+    "class Solution:\n",
+    "    # TODO: Implement Your Solution Here\n",
+    "    pass\n",
+    "\n",
+    "def assert_test(expected: str, actual: str, test_name: str):\n",
+    "   if expected == actual:\n",
+    "       print(f\"PASS: {test_name}\")\n",
+    "   else:\n",
+    "       print(f\"FAIL: {test_name} | Expected: '{expected}', Got: '{actual}'\")"
    ]
   },
   {
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "### **CASE 1 :**  \\n"
+    "### **CASE 1:**"
    ]
   },
   {
    "cell_type": "code",
    "execution_count": null,
    "metadata": {},
+   "outputs": [],
    "source": [
-    "# Test CASE 1\\n",
-    "input = None\\n",
-    "output = None\\n",
-    "expected = None\\n",
-    "assertTest(expected,output,"Test Case 1")"
+    "sol = Solution()\n",
+    "input_data = None\n",
+    "output = None\n",
+    "expected = None\n",
+    "assert_test(expected, output, \"Test Case 1\")"
    ]
   },
   {
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "### **CASE 2 :**  \\n"
+    "### **CASE 2:**"
    ]
   },
   {
    "cell_type": "code",
    "execution_count": null,
    "metadata": {},
+   "outputs": [],
    "source": [
-    "# Test CASE 2\\n",
-    "input = None\\n",
-    "output = None\\n",
-    "expected = None\\n",
-    "assertTest(expected,output,"Test Case 2")
+    "sol = Solution()\n",
+    "input_data = None\n",
+    "output = None\n",
+    "expected = None\n",
+    "assert_test(expected, output, \"Test Case 2\")"
    ]
   },
   {
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "### **CASE 3 :**  \\n"
+    "### **CASE 3:**"
    ]
   },
   {
    "cell_type": "code",
    "execution_count": null,
    "metadata": {},
+   "outputs": [],
    "source": [
-    "# Test CASE 3\\n",
-    "input = None\\n",
-    "output = None\\n",
-    "expected = None\\n",
-    "assertTest(expected,output,"Test Case 3")
+    "sol = Solution()\n",
+    "input_data = None\n",
+    "output = None\n",
+    "expected = None\n",
+    "assert_test(expected, output, \"Test Case 3\")"
    ]
   }
  ],
@@ -159,9 +167,9 @@ cat > "$DATE_FOLDER/$PROBLEM_FOLDER/python/solution.ipynb" << EOF
 }
 EOF
 
-# Create README.md with default content
-cat > "$DATE_FOLDER/$PROBLEM_FOLDER/README.md" << 'EOF'
-# Daily LeetCode Problem - $(date +%B\ %d,\ %Y)
+# Create README.md with dynamic date evaluation
+cat > "$DATE_FOLDER/$PROBLEM_FOLDER/README.md" << EOF
+# Daily LeetCode Problem - $(date +"%B %d, %Y")
 
 ## Problem
 
@@ -175,7 +183,7 @@ cat > "$DATE_FOLDER/$PROBLEM_FOLDER/README.md" << 'EOF'
 
 ### Java Solution
 
-Located in [`java/Solution.java`](java/Solution.java)
+Located in [\`java/Solution.java\`](java/Solution.java)
 
 #### Approach
 
@@ -188,7 +196,7 @@ Located in [`java/Solution.java`](java/Solution.java)
 
 ### Python Solution
 
-Located in [`python/solution.ipynb`](python/solution.ipynb)
+Located in [\`python/solution.ipynb\`](python/solution.ipynb)
 
 #### Approach
 
@@ -205,5 +213,5 @@ Located in [`python/solution.ipynb`](python/solution.ipynb)
 EOF
 
 echo "Created LeetCode problem structure at $DATE_FOLDER/$PROBLEM_FOLDER"
-echo "Created Java solution at $DATE_FOLDER/$PROBLEM_FOLDER/java/solution.java"
+echo "Created Java solution at $DATE_FOLDER/$PROBLEM_FOLDER/java/Solution.java"
 echo "Created Jupyter notebook solution at $DATE_FOLDER/$PROBLEM_FOLDER/python/solution.ipynb"
