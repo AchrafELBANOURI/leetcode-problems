@@ -7,17 +7,32 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-# Create the date folder (YYYY-MM-DD format)
+RAW_TITLE="$1"
+
+# 1. Main problem directory uses hyphens (e.g., "Range-Sum-Query-2D---Immutable")
 DATE_FOLDER=$(date +%Y-%m-%d)
-PROBLEM_FOLDER="${1// /-}"  # Replace spaces with hyphens
+PROBLEM_FOLDER="${RAW_TITLE// /-}"  # Replace spaces with hyphens
 
-# Create the directory structure
-mkdir -p "$DATE_FOLDER/$PROBLEM_FOLDER"/{java,python}
+# 2. Convert problem title to camelCase for the subfolder and package declaration
+PACKAGE_NAME=$(echo "$RAW_TITLE" | sed -E 's/[^a-zA-Z0-9 ]//g' | awk '{
+    out = tolower($1);
+    for (i = 2; i <= NF; i++) {
+        out = out toupper(substr($i,1,1)) tolower(substr($i,2));
+    }
+    print out;
+}')
 
-# Create the Java solution file
-cat > "$DATE_FOLDER/$PROBLEM_FOLDER/java/Solution.java" << 'EOF'
+# 3. Create directory structure: main hyphenated folder -> java -> camelCase subfolder
+TARGET_JAVA_DIR="$DATE_FOLDER/$PROBLEM_FOLDER/java/$PACKAGE_NAME"
+mkdir -p "$TARGET_JAVA_DIR"
+mkdir -p "$DATE_FOLDER/$PROBLEM_FOLDER/python"
+
+# 4. Create the Java solution file with camelCase package header
+cat > "$TARGET_JAVA_DIR/Solution.java" << EOF
+package $PACKAGE_NAME;
+
 import java.util.*;
-import utilities.TestUtils;
+import shared.utilities.TestUtils;
 
 class Solution {
     // TODO: Implement solution method here
@@ -52,7 +67,30 @@ class Solution {
 }
 EOF
 
-# Create the Jupyter notebook solution file
+# 5. Automatically update .vscode/settings.json
+SETTINGS_FILE=".vscode/settings.json"
+NEW_SOURCE_PATH="$DATE_FOLDER/$PROBLEM_FOLDER/java"
+
+if [ -f "$SETTINGS_FILE" ]; then
+    # Check if path already exists in settings.json to avoid duplicates
+    if ! grep -q "\"$NEW_SOURCE_PATH\"" "$SETTINGS_FILE"; then
+        # Append the new source path before the closing array bracket ']'
+        sed -i "/\"java.project.sourcePaths\": *\[/a \ \ \ \ \"$NEW_SOURCE_PATH\"," "$SETTINGS_FILE"
+    fi
+else
+    # Create .vscode/settings.json if it doesn't exist yet
+    mkdir -p .vscode
+    cat > "$SETTINGS_FILE" << EOF
+{
+  "java.project.sourcePaths": [
+    "shared",
+    "$NEW_SOURCE_PATH"
+  ]
+}
+EOF
+fi
+
+# 6. Create the Jupyter notebook solution file
 cat > "$DATE_FOLDER/$PROBLEM_FOLDER/python/solution.ipynb" << 'EOF'
 {
  "cells": [
@@ -167,7 +205,7 @@ cat > "$DATE_FOLDER/$PROBLEM_FOLDER/python/solution.ipynb" << 'EOF'
 }
 EOF
 
-# Create README.md with dynamic date evaluation
+# 7. Create README.md
 cat > "$DATE_FOLDER/$PROBLEM_FOLDER/README.md" << EOF
 # Daily LeetCode Problem - $(date +"%B %d, %Y")
 
@@ -183,7 +221,7 @@ cat > "$DATE_FOLDER/$PROBLEM_FOLDER/README.md" << EOF
 
 ### Java Solution
 
-Located in [\`java/Solution.java\`](java/Solution.java)
+Located in [\`java/$PACKAGE_NAME/Solution.java\`](java/$PACKAGE_NAME/Solution.java)
 
 #### Approach
 
@@ -213,5 +251,5 @@ Located in [\`python/solution.ipynb\`](python/solution.ipynb)
 EOF
 
 echo "Created LeetCode problem structure at $DATE_FOLDER/$PROBLEM_FOLDER"
-echo "Created Java solution at $DATE_FOLDER/$PROBLEM_FOLDER/java/Solution.java"
-echo "Created Jupyter notebook solution at $DATE_FOLDER/$PROBLEM_FOLDER/python/solution.ipynb"
+echo "Created Java solution at $TARGET_JAVA_DIR/Solution.java (package: $PACKAGE_NAME)"
+echo "Added '$NEW_SOURCE_PATH' to .vscode/settings.json"
