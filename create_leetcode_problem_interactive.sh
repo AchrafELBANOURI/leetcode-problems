@@ -145,9 +145,9 @@ if [ -z "$PYTHON_CODE" ]; then
     PYTHON_METHOD_BODY='    "        # TODO: Implement Solution Here\n",
     "        pass\n",'
 else
-    PYTHON_METHOD_BODY=$(echo "$PYTHON_CODE" | sed 's/"/\\"/g' | awk '{
-        if (NR > 1) printf ",\n";
-        printf "    \"        %s\\n\"", $0;
+    # Escape quotes and backslashes, then output each line with proper indentation and a trailing comma
+    PYTHON_METHOD_BODY=$(echo "$PYTHON_CODE" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' | awk '{
+        printf "    \"        %s\\n\",\n", $0;
     }')
 fi
 
@@ -210,7 +210,7 @@ cat > "$JAVA_FILE_PATH" << EOF
 package $PACKAGE_NAME;
 
 import java.util.*;
-import shared.utilities.TestUtils;
+import utilities.TestUtils;
 
 class Solution {
     public $RETURN_TYPE_JAVA $FUNC_NAME($JAVA_PARAMS) {
@@ -378,31 +378,35 @@ Located in [\`python/solution.ipynb\`](python/solution.ipynb)
 <!-- Add any additional notes or explanations here -->
 EOF
 
-# --- Prepend to git_commits_utils.txt ---
+# --- Generate git_commits_template.sh ---
 
-COMMIT_ENTRY="------ $RAW_TITLE ----
-git add $DATE_FOLDER/$PROBLEM_FOLDER/java/
-feat($PROBLEM_FOLDER) : solve $RAW_TITLE problem using java
-git add $DATE_FOLDER/$PROBLEM_FOLDER/python/
-feat($PROBLEM_FOLDER) : solve $RAW_TITLE problem using python
-git add $DATE_FOLDER/$PROBLEM_FOLDER/
-feat($PROBLEM_FOLDER) : add README for $RAW_TITLE problem with problem statement and examples"
+GIT_SCRIPT="git_commits_template.sh"
 
-GIT_FILE="git_commits_utils.txt"
+cat > "$GIT_SCRIPT" << EOF
+#!/bin/bash
 
-if [ -f "$GIT_FILE" ]; then
-    TMP_FILE=$(mktemp)
-    echo -e "$COMMIT_ENTRY\n" > "$TMP_FILE"
-    cat "$GIT_FILE" >> "$TMP_FILE"
-    mv "$TMP_FILE" "$GIT_FILE"
-else
-    echo -e "$COMMIT_ENTRY\n" > "$GIT_FILE"
-fi
+# Auto-generated commits for: $RAW_TITLE ($DATE_FOLDER)
 
-# --- Open Files in VS Code ---
+git add "$DATE_FOLDER/$PROBLEM_FOLDER/java/"
+git commit -m "feat($PROBLEM_FOLDER): solve $RAW_TITLE problem using java"
 
+git add "$DATE_FOLDER/$PROBLEM_FOLDER/python/"
+git commit -m "feat($PROBLEM_FOLDER): solve $RAW_TITLE problem using python"
+
+git add "$DATE_FOLDER/$PROBLEM_FOLDER/"
+git commit -m "feat($PROBLEM_FOLDER): add README for $RAW_TITLE problem with problem statement and examples"
+EOF
+
+chmod +x "$GIT_SCRIPT"
+
+
+# --- Open Files & Reload Window in VS Code ---
 if command -v code &> /dev/null; then
+    # Open generated solution files
     code "$JAVA_FILE_PATH" "$PYTHON_FILE_PATH" "$README_FILE_PATH"
+    
+    # Reload window so the Java Language Support extension picks up sourcePaths
+    code --command workbench.action.reloadWindow
 fi
 
 echo "--------------------------------------------------"
@@ -410,6 +414,6 @@ echo "Successfully generated files for: $RAW_TITLE"
 echo "Generated $TEST_CASE_COUNT fully configured test case(s)."
 echo "Java path: $JAVA_FILE_PATH"
 echo "Python path: $PYTHON_FILE_PATH"
-echo "Prepended git commit templates to git_commits_utils.txt"
+echo "Update git commit script to git_commits_template.sh"
 echo "Added '$NEW_SOURCE_PATH' to .vscode/settings.json"
 echo "Opened target files directly in VS Code."
