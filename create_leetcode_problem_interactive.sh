@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# --- Interactive Prompts ---
+# --- Interactive Prompts: Function Signature ---
 
 read -p "Project/Problem Name: " RAW_TITLE
 if [ -z "$RAW_TITLE" ]; then
@@ -23,9 +23,28 @@ done
 
 read -p "Return Type (Java style, e.g. int): " RETURN_TYPE_JAVA
 
+# --- Interactive Prompts: Code Implementation ---
+
+echo -e "\nEnter Java code implementation (type 'END' on a new line when finished):"
+JAVA_CODE=""
+while IFS= read -r line; do
+    if [ "$line" = "END" ]; then
+        break
+    fi
+    JAVA_CODE+="$line"$'\n'
+done
+
+echo -e "\nEnter Python code implementation (type 'END' on a new line when finished):"
+PYTHON_CODE=""
+while IFS= read -r line; do
+    if [ "$line" = "END" ]; then
+        break
+    fi
+    PYTHON_CODE+="$line"$'\n'
+done
+
 # --- Helper Formatting Functions ---
 
-# Convert Java types to Python typing hints
 java_to_python_type() {
     local t="$1"
     case "$t" in
@@ -39,11 +58,51 @@ java_to_python_type() {
     esac
 }
 
-# Construct Java parameter list: "int[][] matrix, int row1, int col1"
+format_java_val() {
+    local val="$1"
+    local type="$2"
+    if [[ "$type" == *"[]"* ]]; then
+        val="${val//\[/\{}"
+        val="${val//\]/\}}"
+        if [[ "$val" != "new "* ]] && [[ "$val" != "null" ]]; then
+            echo "new $type$val"
+            return
+        fi
+    fi
+    echo "$val"
+}
+
+format_python_val() {
+    local val="$1"
+    val="${val//\{/\[}"
+    val="${val//\}/\]}"
+    val="${val//true/True}"
+    val="${val//false/False}"
+    val="${val//null/None}"
+    echo "$val"
+}
+
+# --- Interactive Prompts: Test Cases ---
+
+read -p "How many test cases: " TEST_CASE_COUNT
+
+declare -A TEST_INPUTS
+declare -a TEST_EXPECTED
+
+for ((tc=1; tc<=TEST_CASE_COUNT; tc++)); do
+    echo -e "\n--- Test Case $tc ---"
+    for ((arg=0; arg<ARG_COUNT; arg++)); do
+        read -p "Input $((arg+1)) (${ARG_NAMES[$arg]} - ${ARG_TYPES_JAVA[$arg]}): " VAL
+        TEST_INPUTS[$tc,$arg]="$VAL"
+    done
+    read -p "Expected Output ($RETURN_TYPE_JAVA): " EXP_VAL
+    TEST_EXPECTED[$tc]="$EXP_VAL"
+done
+
+# --- Signature Construction ---
+
 JAVA_PARAMS=""
-# Construct Python parameter list: "self, matrix: List[List[int]], row1: int"
 PYTHON_PARAMS="self"
-# Construct Python argument list for function call: "arg1, arg2"
 PYTHON_ARGS=""
 
 for ((i=0; i<ARG_COUNT; i++)); do
@@ -64,7 +123,6 @@ done
 
 PYTHON_RETURN_TYPE=$(java_to_python_type "$RETURN_TYPE_JAVA")
 
-# Set dummy return statement for Java template
 JAVA_DUMMY_RETURN=""
 case "$RETURN_TYPE_JAVA" in
     void) JAVA_DUMMY_RETURN="" ;;
@@ -73,16 +131,41 @@ case "$RETURN_TYPE_JAVA" in
     *) JAVA_DUMMY_RETURN="return null;" ;;
 esac
 
+# --- Format Java Method Body ---
+
+if [ -z "$JAVA_CODE" ]; then
+    JAVA_METHOD_BODY=$'        // TODO: Implement solution method\n        '"$JAVA_DUMMY_RETURN"
+else
+    JAVA_METHOD_BODY=$(echo "$JAVA_CODE" | sed 's/^/        /')
+fi
+
+# --- Format Python Method Body for JSON ---
+
+if [ -z "$PYTHON_CODE" ]; then
+    PYTHON_METHOD_BODY='    "        # TODO: Implement Solution Here\n",
+    "        pass\n",'
+else
+    PYTHON_METHOD_BODY=$(echo "$PYTHON_CODE" | sed 's/"/\\"/g' | awk '{
+        if (NR > 1) printf ",\n";
+        printf "    \"        %s\\n\"", $0;
+    }')
+fi
+
 # --- Directory & Package Naming ---
 
 DATE_FOLDER=$(date +%Y-%m-%d)
-PROBLEM_FOLDER="${RAW_TITLE// /-}"  # Replace spaces with hyphens
+PROBLEM_FOLDER="${RAW_TITLE// /-}"
 
-# Convert title to camelCase for subfolder and package declaration
 PACKAGE_NAME=$(echo "$RAW_TITLE" | sed -E 's/[^a-zA-Z0-9 ]//g' | awk '{
     out = tolower($1);
     for (i = 2; i <= NF; i++) {
-        out = out toupper(substr($i,1,1)) tolower(substr($i,2));
+        word = $i;
+        low = tolower(word);
+        if (low ~ /^[ivxlcdm]+$/) {
+            out = out toupper(word);
+        } else {
+            out = out toupper(substr(word,1,1)) tolower(substr(word,2));
+        }
     }
     print out;
 }')
@@ -91,69 +174,53 @@ TARGET_JAVA_DIR="$DATE_FOLDER/$PROBLEM_FOLDER/java/$PACKAGE_NAME"
 mkdir -p "$TARGET_JAVA_DIR"
 mkdir -p "$DATE_FOLDER/$PROBLEM_FOLDER/python"
 
-# --- Create Java Solution File ---
+# --- Build Java Test Block Code ---
 
-# --- Generate Test Case 1 Variables ---
-JAVA_TEST_VARS_1=""
-for ((i=0; i<ARG_COUNT; i++)); do
-    JAVA_TEST_VARS_1+="${ARG_TYPES_JAVA[$i]} ${ARG_NAMES[$i]}_1 = null;"$'\n'
+JAVA_TEST_BLOCKS=""
+
+for ((tc=1; tc<=TEST_CASE_COUNT; tc++)); do
+    JAVA_TEST_BLOCKS+="        // Test Case $tc"$'\n'
+    JAVA_CALL_ARGS=""
+    
+    for ((arg=0; arg<ARG_COUNT; arg++)); do
+        var_name="${ARG_NAMES[$arg]}_$tc"
+        raw_val="${TEST_INPUTS[$tc,$arg]}"
+        formatted_val=$(format_java_val "$raw_val" "${ARG_TYPES_JAVA[$arg]}")
+        
+        JAVA_TEST_BLOCKS+="        ${ARG_TYPES_JAVA[$arg]} $var_name = $formatted_val;"$'\n'
+        
+        if [ $arg -gt 0 ]; then JAVA_CALL_ARGS+=", "; fi
+        JAVA_CALL_ARGS+="$var_name"
+    done
+    
+    exp_formatted=$(format_java_val "${TEST_EXPECTED[$tc]}" "$RETURN_TYPE_JAVA")
+    
+    JAVA_TEST_BLOCKS+="        $RETURN_TYPE_JAVA output$tc = sol.$FUNC_NAME($JAVA_CALL_ARGS);"$'\n'
+    JAVA_TEST_BLOCKS+="        $RETURN_TYPE_JAVA expected$tc = $exp_formatted;"$'\n\n'
+    JAVA_TEST_BLOCKS+="        TestUtils.assertTest("$'\n'
+    JAVA_TEST_BLOCKS+="            expected$tc, "$'\n'
+    JAVA_TEST_BLOCKS+="            output$tc,"$'\n'
+    JAVA_TEST_BLOCKS+="            \"Test Case $tc\""$'\n'
+    JAVA_TEST_BLOCKS+="        );"$'\n\n'
 done
 
-# --- Generate Test Case 2 Variables ---
-JAVA_TEST_VARS_2=""
-for ((i=0; i<ARG_COUNT; i++)); do
-    JAVA_TEST_VARS_2+="${ARG_TYPES_JAVA[$i]} ${ARG_NAMES[$i]}_2 = null;"$'\n'
-done
+JAVA_FILE_PATH="$TARGET_JAVA_DIR/Solution.java"
 
-# --- Construct Java Function Arguments for Call ---
-JAVA_ARGS_1=""
-JAVA_ARGS_2=""
-for ((i=0; i<ARG_COUNT; i++)); do
-    if [ $i -gt 0 ]; then
-        JAVA_ARGS_1+=", "
-        JAVA_ARGS_2+=", "
-    fi
-    JAVA_ARGS_1+="${ARG_NAMES[$i]}_1"
-    JAVA_ARGS_2+="${ARG_NAMES[$i]}_2"
-done
-
-cat > "$TARGET_JAVA_DIR/Solution.java" << EOF
+cat > "$JAVA_FILE_PATH" << EOF
 package $PACKAGE_NAME;
 
 import java.util.*;
-import utilities.TestUtils;
+import shared.utilities.TestUtils;
 
 class Solution {
     public $RETURN_TYPE_JAVA $FUNC_NAME($JAVA_PARAMS) {
-        // TODO: Implement solution method
-        $JAVA_DUMMY_RETURN
+$JAVA_METHOD_BODY
     }
     
     public static void main(String[] args) {
         Solution sol = new Solution();
 
-        // Test Case 1
-        $(echo -e "$JAVA_TEST_VARS_1")        
-        $RETURN_TYPE_JAVA output1 = sol.$FUNC_NAME($JAVA_ARGS_1);
-        $RETURN_TYPE_JAVA expected1 = null;
-
-        TestUtils.assertTest(
-            expected1, 
-            output1,
-            "Test Case 1"
-        );
-        
-        // Test Case 2
-        $(echo -e "$JAVA_TEST_VARS_2")        
-        $RETURN_TYPE_JAVA output2 = sol.$FUNC_NAME($JAVA_ARGS_2);
-        $RETURN_TYPE_JAVA expected2 = null;
-        
-        TestUtils.assertTest(
-            expected2, 
-            output2,
-            "Test Case 2"
-        );
-    }
+$JAVA_TEST_BLOCKS    }
 }
 EOF
 
@@ -178,14 +245,46 @@ else
 EOF
 fi
 
-# --- Create Jupyter Notebook File ---
+# --- Build Python Notebook Test Cells ---
 
-PYTHON_TEST_VARS=""
-for ((i=0; i<ARG_COUNT; i++)); do
-    PYTHON_TEST_VARS+="\\n${ARG_NAMES[$i]} = None"
+PYTHON_CELLS=""
+
+for ((tc=1; tc<=TEST_CASE_COUNT; tc++)); do
+    PY_VAR_INITS=""
+    for ((arg=0; arg<ARG_COUNT; arg++)); do
+        pname="${ARG_NAMES[$arg]}"
+        raw_val="${TEST_INPUTS[$tc,$arg]}"
+        formatted_val=$(format_python_val "$raw_val")
+        PY_VAR_INITS+="\\n$pname = $formatted_val"
+    done
+
+    exp_formatted=$(format_python_val "${TEST_EXPECTED[$tc]}")
+
+    PYTHON_CELLS+=",
+  {
+   \"cell_type\": \"markdown\",
+   \"metadata\": {},
+   \"source\": [
+    \"### **CASE $tc:**\"
+   ]
+  },
+  {
+   \"cell_type\": \"code\",
+   \"execution_count\": null,
+   \"metadata\": {},
+   \"outputs\": [],
+   \"source\": [
+    \"sol = Solution()$PY_VAR_INITS\\n\",
+    \"output = sol.$FUNC_NAME($PYTHON_ARGS)\\n\",
+    \"expected = $exp_formatted\\n\",
+    \"assert_test(expected, output, \\\"Test Case $tc\\\")\"
+   ]
+  }"
 done
 
-cat > "$DATE_FOLDER/$PROBLEM_FOLDER/python/solution.ipynb" << EOF
+PYTHON_FILE_PATH="$DATE_FOLDER/$PROBLEM_FOLDER/python/solution.ipynb"
+
+cat > "$PYTHON_FILE_PATH" << EOF
 {
  "cells": [
   {
@@ -205,54 +304,15 @@ cat > "$DATE_FOLDER/$PROBLEM_FOLDER/python/solution.ipynb" << EOF
     "\n",
     "class Solution:\n",
     "    def $FUNC_NAME($PYTHON_PARAMS) -> $PYTHON_RETURN_TYPE:\n",
-    "        # TODO: Implement Solution Here\n",
-    "        pass\n",
+$PYTHON_METHOD_BODY
     "\n",
     "def assert_test(expected: Any, actual: Any, test_name: str):\n",
-    "   if expected == actual:\n",
-    "       print(f\"PASS: {test_name}\")\n",
-    "   else:\n",
-    "       print(f\"FAIL: {test_name} | Expected: '{expected}', Got: '{actual}'\")"
+    "    if expected == actual:\n",
+    "        print(f\"PASS: {test_name}\")\n",
+    "    else:\n",
+    "        print(f\"FAIL: {test_name} | Expected: '{expected}', Got: '{actual}'\")\n"
    ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### **CASE 1:**"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "sol = Solution()$PYTHON_TEST_VARS\n",
-    "output = sol.$FUNC_NAME($PYTHON_ARGS)\n",
-    "expected = None\n",
-    "assert_test(expected, output, \"Test Case 1\")"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### **CASE 2:**"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "sol = Solution()$PYTHON_TEST_VARS\n",
-    "output = sol.$FUNC_NAME($PYTHON_ARGS)\n",
-    "expected = None\n",
-    "assert_test(expected, output, \"Test Case 2\")"
-   ]
-  }
+  }$PYTHON_CELLS
  ],
  "metadata": {
   "kernelspec": {
@@ -261,15 +321,7 @@ cat > "$DATE_FOLDER/$PROBLEM_FOLDER/python/solution.ipynb" << EOF
    "name": "python3"
   },
   "language_info": {
-   "codemirror_mode": {
-    "name": "ipython",
-    "version": 3
-   },
-   "file_extension": ".py",
-   "mimetype": "text/x-python",
    "name": "python",
-   "nbconvert_exporter": "python",
-   "pygments_lexer": "ipython3",
    "version": "3.12.3"
   }
  },
@@ -280,7 +332,9 @@ EOF
 
 # --- Create README.md ---
 
-cat > "$DATE_FOLDER/$PROBLEM_FOLDER/README.md" << EOF
+README_FILE_PATH="$DATE_FOLDER/$PROBLEM_FOLDER/README.md"
+
+cat > "$README_FILE_PATH" << EOF
 # Daily LeetCode Problem - $(date +"%B %d, %Y")
 
 ## Problem
@@ -324,8 +378,38 @@ Located in [\`python/solution.ipynb\`](python/solution.ipynb)
 <!-- Add any additional notes or explanations here -->
 EOF
 
+# --- Prepend to git_commits_utils.txt ---
+
+COMMIT_ENTRY="------ $RAW_TITLE ----
+git add $DATE_FOLDER/$PROBLEM_FOLDER/java/
+feat($PROBLEM_FOLDER) : solve $RAW_TITLE problem using java
+git add $DATE_FOLDER/$PROBLEM_FOLDER/python/
+feat($PROBLEM_FOLDER) : solve $RAW_TITLE problem using python
+git add $DATE_FOLDER/$PROBLEM_FOLDER/
+feat($PROBLEM_FOLDER) : add README for $RAW_TITLE problem with problem statement and examples"
+
+GIT_FILE="git_commits_utils.txt"
+
+if [ -f "$GIT_FILE" ]; then
+    TMP_FILE=$(mktemp)
+    echo -e "$COMMIT_ENTRY\n" > "$TMP_FILE"
+    cat "$GIT_FILE" >> "$TMP_FILE"
+    mv "$TMP_FILE" "$GIT_FILE"
+else
+    echo -e "$COMMIT_ENTRY\n" > "$GIT_FILE"
+fi
+
+# --- Open Files in VS Code ---
+
+if command -v code &> /dev/null; then
+    code "$JAVA_FILE_PATH" "$PYTHON_FILE_PATH" "$README_FILE_PATH"
+fi
+
 echo "--------------------------------------------------"
 echo "Successfully generated files for: $RAW_TITLE"
-echo "Java path: $TARGET_JAVA_DIR/Solution.java"
-echo "Python path: $DATE_FOLDER/$PROBLEM_FOLDER/python/solution.ipynb"
+echo "Generated $TEST_CASE_COUNT fully configured test case(s)."
+echo "Java path: $JAVA_FILE_PATH"
+echo "Python path: $PYTHON_FILE_PATH"
+echo "Prepended git commit templates to git_commits_utils.txt"
 echo "Added '$NEW_SOURCE_PATH' to .vscode/settings.json"
+echo "Opened target files directly in VS Code."
