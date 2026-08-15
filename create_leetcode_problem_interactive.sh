@@ -250,15 +250,18 @@ fi
 PYTHON_CELLS=""
 
 for ((tc=1; tc<=TEST_CASE_COUNT; tc++)); do
-    PY_VAR_INITS=""
+    PY_VAR_LINES=""
     for ((arg=0; arg<ARG_COUNT; arg++)); do
         pname="${ARG_NAMES[$arg]}"
         raw_val="${TEST_INPUTS[$tc,$arg]}"
         formatted_val=$(format_python_val "$raw_val")
-        PY_VAR_INITS+="\\n$pname = $formatted_val"
+        # Escape quotes in values for JSON safety and format as a distinct JSON array string
+        formatted_val_escaped=$(echo "$formatted_val" | sed 's/"/\\"/g')
+        PY_VAR_LINES+="    \"$pname = $formatted_val_escaped\\n\",\n"
     done
 
     exp_formatted=$(format_python_val "${TEST_EXPECTED[$tc]}")
+    exp_formatted_escaped=$(echo "$exp_formatted" | sed 's/"/\\"/g')
 
     PYTHON_CELLS+=",
   {
@@ -274,9 +277,9 @@ for ((tc=1; tc<=TEST_CASE_COUNT; tc++)); do
    \"metadata\": {},
    \"outputs\": [],
    \"source\": [
-    \"sol = Solution()$PY_VAR_INITS\\n\",
-    \"output = sol.$FUNC_NAME($PYTHON_ARGS)\\n\",
-    \"expected = $exp_formatted\\n\",
+    \"sol = Solution()\\n\",
+$PY_VAR_LINES    \"output = sol.$FUNC_NAME($PYTHON_ARGS)\\n\",
+    \"expected = $exp_formatted_escaped\\n\",
     \"assert_test(expected, output, \\\"Test Case $tc\\\")\"
    ]
   }"
