@@ -37,7 +37,7 @@ public class TestUtils {
         if (passed) {
             System.out.println("PASS: " + testName);
         } else {
-            System.out.printf("FAIL: %s | Expected: \"%s\", Got: \"%s\"%n", testName, expected, actual);
+            System.out.printf("FAIL: %s \nExpected: \"%s\" \nGot: \"%s\"%n", testName, expected, actual);
         }
     }
 }
