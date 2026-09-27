@@ -134,21 +134,22 @@ esac
 # --- Format Java Method Body ---
 
 if [ -z "$JAVA_CODE" ]; then
-    JAVA_METHOD_BODY=$'        // TODO: Implement solution method\n        '"$JAVA_DUMMY_RETURN"
+    JAVA_METHOD_BODY=$'\t\t// TODO: Implement solution method\n\t'"$JAVA_DUMMY_RETURN"
 else
-    JAVA_METHOD_BODY=$(echo "$JAVA_CODE" | sed 's/^/        /')
+    JAVA_METHOD_BODY=$(echo "$JAVA_CODE")
 fi
 
-# --- Format Python Method Body for JSON ---
-
+# --- Format Python Method Body ---
 if [ -z "$PYTHON_CODE" ]; then
-    PYTHON_METHOD_BODY='    "        # TODO: Implement Solution Here\n",
-    "        pass\n",'
+    PYTHON_METHOD_BODY="        # TODO: Implement Solution Here\n        pass"
 else
-    # Escape quotes and backslashes, then output each line with proper indentation and a trailing comma
-    PYTHON_METHOD_BODY=$(echo "$PYTHON_CODE" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' | awk '{
-        printf "    \"        %s\\n\",\n", $0;
-    }')
+    # 1. Strip trailing newlines
+    # 2. Determine base indentation of line 1 or line 2 (whichever has text)
+    # 3. Strip existing top-level indent from all lines, then apply clean 8 spaces
+    PYTHON_METHOD_BODY=$(echo "$PYTHON_CODE" | awk '
+        NR == 1 && $0 ~ /^[[:space:]]+/ { sub(/^[[:space:]]+/, ""); }
+        { print $0 }
+    ' | sed 's/^[[:space:]]\{1,4\}//' | sed 's/^/    /')
 fi
 
 # --- Directory & Package Naming ---
@@ -245,7 +246,7 @@ else
 EOF
 fi
 
-# --- Build Python Notebook Test Cells ---
+# --- Build Python Test Cases ---
 
 PYTHON_CELLS=""
 
@@ -255,82 +256,47 @@ for ((tc=1; tc<=TEST_CASE_COUNT; tc++)); do
         pname="${ARG_NAMES[$arg]}"
         raw_val="${TEST_INPUTS[$tc,$arg]}"
         formatted_val=$(format_python_val "$raw_val")
-        # Escape quotes in values for JSON safety and format as a distinct JSON array string
-        formatted_val_escaped=$(echo "$formatted_val" | sed 's/"/\\"/g')
-        PY_VAR_LINES+="    \"$pname = $formatted_val_escaped\\n\",\n"
+        
+        # Raw assignment line without JSON quotes or extra escaping
+        PY_VAR_LINES+="$pname = $formatted_val"$'\n'
     done
 
     exp_formatted=$(format_python_val "${TEST_EXPECTED[$tc]}")
-    exp_formatted_escaped=$(echo "$exp_formatted" | sed 's/"/\\"/g')
 
-    PYTHON_CELLS+=",
-  {
-   \"cell_type\": \"markdown\",
-   \"metadata\": {},
-   \"source\": [
-    \"### **CASE $tc:**\"
-   ]
-  },
-  {
-   \"cell_type\": \"code\",
-   \"execution_count\": null,
-   \"metadata\": {},
-   \"outputs\": [],
-   \"source\": [
-    \"sol = Solution()\\n\",
-$PY_VAR_LINES    \"output = sol.$FUNC_NAME($PYTHON_ARGS)\\n\",
-    \"expected = $exp_formatted_escaped\\n\",
-    \"assert_test(expected, output, \\\"Test Case $tc\\\")\"
-   ]
-  }"
+# Indent comment and execution statements with tabs
+PYTHON_CELLS+="    # Case $tc"$'\n'
+PYTHON_CELLS+="    $PY_VAR_LINES"
+PYTHON_CELLS+="    output = sol.$FUNC_NAME($PYTHON_ARGS)"$'\n'
+PYTHON_CELLS+="    expected = $exp_formatted"$'\n'
+PYTHON_CELLS+="    assert_test(expected, output, \"Test Case $tc\")"$'\n\n'
 done
 
-PYTHON_FILE_PATH="$DATE_FOLDER/$PROBLEM_FOLDER/python/solution.ipynb"
+# Set path to .py
+PYTHON_FILE_PATH="$DATE_FOLDER/$PROBLEM_FOLDER/python/solution.py"
 
 cat > "$PYTHON_FILE_PATH" << EOF
-{
- "cells": [
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "## **Setup & Solution Code:**"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "from typing import List, Any\n",
-    "\n",
-    "class Solution:\n",
-    "    def $FUNC_NAME($PYTHON_PARAMS) -> $PYTHON_RETURN_TYPE:\n",
+from typing import List, Any
+
+
+class Solution:
+    def $FUNC_NAME($PYTHON_PARAMS) -> $PYTHON_RETURN_TYPE:
 $PYTHON_METHOD_BODY
-    "\n",
-    "def assert_test(expected: Any, actual: Any, test_name: str):\n",
-    "    if expected == actual:\n",
-    "        print(f\"PASS: {test_name}\")\n",
-    "    else:\n",
-    "        print(f\"FAIL: {test_name} | Expected: '{expected}', Got: '{actual}'\")\n"
-   ]
-  }$PYTHON_CELLS
- ],
- "metadata": {
-  "kernelspec": {
-   "display_name": "Python 3",
-   "language": "python",
-   "name": "python3"
-  },
-  "language_info": {
-   "name": "python",
-   "version": "3.12.3"
-  }
- },
- "nbformat": 4,
- "nbformat_minor": 4
-}
+
+
+def assert_test(expected: Any, actual: Any, test_name: str):
+    if expected == actual:
+        print(f"PASS: {test_name}")
+    else:
+        print(f"FAIL: {test_name} | Expected: '{expected}', Got: '{actual}'")
+
+
+def main():
+    sol = Solution()
+
+$PYTHON_CELLS
+
+if __name__ == "__main__":
+    main()
 EOF
 
 # --- Create README.md ---
@@ -365,7 +331,7 @@ Located in [\`java/$PACKAGE_NAME/Solution.java\`](java/$PACKAGE_NAME/Solution.ja
 
 ### Python Solution
 
-Located in [\`python/solution.ipynb\`](python/solution.ipynb)
+Located in [\`python/solution.py\`](python/solution.py)
 
 #### Approach
 
@@ -403,13 +369,11 @@ EOF
 chmod +x "$GIT_SCRIPT"
 
 
-# --- Open Files & Reload Window in VS Code ---
+# --- Open Files & Focus Current VS Code Window ---
 if command -v code &> /dev/null; then
-    # Open generated solution files
-    code "$JAVA_FILE_PATH" "$PYTHON_FILE_PATH" "$README_FILE_PATH"
-    
-    # Reload window so the Java Language Support extension picks up sourcePaths
-    code --command workbench.action.reloadWindow
+    # -r reuses the current active window
+    # -g focuses and refreshes the editor tabs for these file paths
+    code -r -g "$JAVA_FILE_PATH" "$PYTHON_FILE_PATH" "$README_FILE_PATH"
 fi
 
 echo "--------------------------------------------------"
