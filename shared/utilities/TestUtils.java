@@ -17,6 +17,14 @@ public class TestUtils {
         printResult(Arrays.equals(expected, actual), Arrays.toString(expected), Arrays.toString(actual), testName);
     }
 
+    public static void assertTest(char[] expected, char[] actual, String testName) {
+        printResult(Arrays.equals(expected, actual), Arrays.toString(expected), Arrays.toString(actual), testName);
+    }
+
+    public static void assertTest(double[] expected, double[] actual, String testName) {
+        printResult(Arrays.equals(expected, actual), Arrays.toString(expected), Arrays.toString(actual), testName);
+    }
+
     // 3. Collections (List, Set, Queue, etc.)
     public static void assertTest(Collection<?> expected, Collection<?> actual, String testName) {
         printResult(Objects.equals(expected, actual), expected, actual, testName);
